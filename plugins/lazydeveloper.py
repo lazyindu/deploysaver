@@ -109,7 +109,7 @@ async def lazydeveloper_handle_url(client, message, url, user_id):
         for platform, handler in PLATFORM_HANDLERS.items():
             if platform in url:
                 await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-                await ok.edit(f"Detected {platform} URL!")
+                await ok.edit(f"dᴇᴛᴇᴄᴛᴇᴅ {platform} ᴜʀʟ!")
                 # Create a task for the handler function
                 lazytask = asyncio.create_task(handler(client, message, url))
                 user_tasks[user_id].append(lazytask)
@@ -117,14 +117,15 @@ async def lazydeveloper_handle_url(client, message, url, user_id):
                 await ok.delete()
                 return
             
+        await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         await ok.edit("😞 oᴏps! lᴏᴏks lɪᴋᴇ wᴇ'ʀᴇ nᴏᴛ frɪᴇnds wɪᴛʜ ᴛʜᴀᴛ lɪɴᴋ yᴇᴛ. 🌐\n💔 bᴜᴛ dᴏɴ'ᴛ wᴏʀʀʏ, wᴇ'ʀᴇ wᴏʀᴋɪɴɢ hᴀʀᴅ ᴛᴏ bʀɪɴɢ ɪᴛ ᴛᴏ ᴛʜᴇ pᴀʀᴛʏ! 🎉 \n\nsᴛᴀʏ ᴛᴜɴᴇᴅ! 👀")
         await client.send_message(LOG_CHANNEL,
                                 f"<b>🚨 ᴜɴᴋɴᴏᴡɴ ᴘʟᴀᴛꜰᴏʀᴍ ʟɪɴᴋ sᴇɴᴛ! 🧐</b>\n<b>ᴛʜᴇ ᴜsᴇʀ ᴇɴᴛᴇʀᴇᴅ ᴀ ʟɪɴᴋ ғʀᴏᴍ ᴀ ᴘʟᴀᴛꜰᴏʀᴍ ᴡᴇ ᴅᴏɴ'ᴛ ʀᴇᴄᴏɢɴɪᴢᴇ. ᴘʟᴇᴀsᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ʟɪɴᴋ ᴏʀ ᴜᴘᴅᴀᴛᴇ ᴏᴜʀ ᴘʟᴀᴛꜰᴏʀᴍ ʜᴀɴᴅʟᴇʀ.</b>\n\n🔗hᴇʀᴇ ɪs ᴛʜᴇ ʟɪɴᴋ::\n{url}\nᴜsᴇʀ:{message.from_user.mention}",
-                                disable_webpage_preview=True, 
+                                disable_web_page_preview = True, 
                                 parse_mode=enums.ParseMode.HTML)
     except Exception as e:
         # Handle any errors
-        await ok.delete() if ok else None
+        await ok.delete()
         await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         await client.send_message(message.chat.id, f"sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ...\nᴘʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ ᴏʀ ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ.")
         print(f"❌ An error occurred: {e}")
