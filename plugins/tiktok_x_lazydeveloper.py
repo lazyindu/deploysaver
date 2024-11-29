@@ -153,7 +153,9 @@ async def send_video(client, message: Message, info_dict, video_file, destinatio
                     chat_id=LOG_CHANNEL,
                     from_chat_id=message.chat.id,
                     message_id=message.id,
-                    caption=caption
+                    caption=caption,
+                    disable_webpage_preview=True, 
+                    parse_mode=enums.ParseMode.HTML
                 )
     # HANDLING BOT AFTER UPLOAD COMPLETE
     await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
