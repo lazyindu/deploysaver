@@ -111,9 +111,8 @@ async def lazydeveloper_handle_url(client, message, url, user_id):
                 await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
                 await ok.edit(f"dᴇᴛᴇᴄᴛᴇᴅ {platform} ᴜʀʟ!")
                 # Create a task for the handler function
-                lazytask = asyncio.create_task(handler(client, message, url))
+                lazytask = asyncio.create_task(handler(client, message, url, platform))
                 user_tasks[user_id].append(lazytask)
-                print(f"platform => {platform}")
                 lazytask.add_done_callback(lambda t: asyncio.create_task(task_done_callback(client, message, user_id, t)))
                 await ok.delete()
                 return
@@ -121,7 +120,7 @@ async def lazydeveloper_handle_url(client, message, url, user_id):
         await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         await ok.edit("😞 oᴏps! lᴏᴏks lɪᴋᴇ wᴇ'ʀᴇ nᴏᴛ frɪᴇnds wɪᴛʜ ᴛʜᴀᴛ lɪɴᴋ yᴇᴛ. 🌐\n💔 bᴜᴛ dᴏɴ'ᴛ wᴏʀʀʏ, wᴇ'ʀᴇ wᴏʀᴋɪɴɢ hᴀʀᴅ ᴛᴏ bʀɪɴɢ ɪᴛ ᴛᴏ ᴛʜᴇ pᴀʀᴛʏ! 🎉 \n\nsᴛᴀʏ ᴛᴜɴᴇᴅ! 👀")
         await client.send_message(LOG_CHANNEL,
-                                f"<b>🚨 ᴜɴᴋɴᴏᴡɴ ᴘʟᴀᴛꜰᴏʀᴍ ʟɪɴᴋ sᴇɴᴛ! 🧐</b>\n<b>ᴛʜᴇ ᴜsᴇʀ ᴇɴᴛᴇʀᴇᴅ ᴀ ʟɪɴᴋ ғʀᴏᴍ ᴀ ᴘʟᴀᴛꜰᴏʀᴍ ᴡᴇ ᴅᴏɴ'ᴛ ʀᴇᴄᴏɢɴɪᴢᴇ. ᴘʟᴇᴀsᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ʟɪɴᴋ ᴏʀ ᴜᴘᴅᴀᴛᴇ ᴏᴜʀ ᴘʟᴀᴛꜰᴏʀᴍ ʜᴀɴᴅʟᴇʀ.</b>\n\n🔗hᴇʀᴇ ɪs ᴛʜᴇ ʟɪɴᴋ::\n{url}\nᴜsᴇʀ:{message.from_user.mention}",
+                                f"<b>🚨 ᴜɴᴋɴᴏᴡɴ ᴘʟᴀᴛꜰᴏʀᴍ ʟɪɴᴋ sᴇɴᴛ!</b>\n\n<b>ᴛʜᴇ ᴜsᴇʀ ᴇɴᴛᴇʀᴇᴅ ᴀ ʟɪɴᴋ ғʀᴏᴍ ᴀ ᴘʟᴀᴛꜰᴏʀᴍ ᴡᴇ ᴅᴏɴ'ᴛ ʀᴇᴄᴏɢɴɪᴢᴇ. ᴘʟᴇᴀsᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ʟɪɴᴋ ᴏʀ ᴜᴘᴅᴀᴛᴇ ᴏᴜʀ ᴘʟᴀᴛꜰᴏʀᴍ ʜᴀɴᴅʟᴇʀ.</b>\n\n⚡hᴇʀᴇ ɪs ᴛʜᴇ ʟɪɴᴋ::\n{url}\n\n👫ᴜsᴇʀ::{message.from_user.mention}\n\n<blockquote>🦋 with love {client.user.mention} 🍟</blockquote>",
                                 disable_web_page_preview = True, 
                                 parse_mode=enums.ParseMode.HTML)
     except Exception as e:

@@ -100,7 +100,7 @@ async def download_video(url, destination_folder, message, format="video"):
         print(f"Error during download: {e}")
         return False
 
-async def send_video(client, message: Message, info_dict, video_file, destination_folder, progress_message3, baseurl):
+async def send_video(client, message: Message, info_dict, video_file, destination_folder, progress_message3, baseurl, platform):
     await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_VIDEO)
     basename = video_file.rsplit(".", 1)[-2]
     thumbnail_url = info_dict["thumbnail"]
@@ -143,8 +143,9 @@ async def send_video(client, message: Message, info_dict, video_file, destinatio
         org_cap = title[:97] + "..." if len(title) >= 100 else title
 
         caption = (
-                f"<b>📂ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                f"<b>📂 ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
                 f"<blockquote><b>{org_cap}</b></blockquote>\n"
+                f"<blockquote><b>🍿ᴘʟᴀᴛꜰᴏʀᴍ: {platform}</b></blockquote>\n"
                 f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
                 f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
                 f"<blockquote>🔗 <b>ᴜʀʟ:</b> {baseurl}</blockquote>"
@@ -163,7 +164,7 @@ async def send_video(client, message: Message, info_dict, video_file, destinatio
         os.remove(thumbnail_file)
 
 
-async def download_from_lazy_tiktok_and_x(client, message, url):
+async def download_from_lazy_tiktok_and_x(client, message, url, platform):
     try:
         await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         progress_message2 = await message.reply("<i>⚙ ᴘʀᴇᴘᴀʀɪɴɢ\nᴀɴᴀʟʏsɪɴɢ yᴏᴜʀ ᴜʀʟ...</i>")
@@ -190,7 +191,7 @@ async def download_from_lazy_tiktok_and_x(client, message, url):
             video_file = ydl.prepare_filename(info_dict)
             try:
                 # print(f"processing vide0 send => {video_file}")
-                await send_video(client, message, info_dict, video_file, destination_folder, progress_message2, baseurl)
+                await send_video(client, message, info_dict, video_file, destination_folder, progress_message2, baseurl, platform)
             except Exception as lazy:
                 print(f"Error in task => {lazy}")
     except Exception as e:

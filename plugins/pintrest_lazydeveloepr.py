@@ -38,7 +38,7 @@ async def lazy_get_download_url(link):
     print(download_url)
     return download_url
 
-async def download_pintrest_vid(client, message, url):
+async def download_pintrest_vid(client, message, url, platform):
     try:
         await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         full_url = expand_url(url)
@@ -65,7 +65,8 @@ async def download_pintrest_vid(client, message, url):
                 # Send the video to the log channel with details
                 # org_cap = title[:97] + "..." if len(title) >= 100 else title
                 caption = (
-                        f"<b>📂ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                        f"<b>📂 ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                        f"<blockquote><b>🍿ᴘʟᴀᴛꜰᴏʀᴍ: {platform}</b></blockquote>\n"
                         f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
                         f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
                         f"<blockquote>🔗 <b>ᴜʀʟ:</b> {full_url}</blockquote>"

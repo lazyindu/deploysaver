@@ -23,7 +23,7 @@ async def initiliselazyinsta(Lazy, post_shortcode):
     post = instaloader.Post.from_shortcode(Lazy.context, post_shortcode)
     return post
 
-async def download_from_lazy_instagram(client, message, url):
+async def download_from_lazy_instagram(client, message, url, platform):
     await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     progress_message2 = await message.reply("<i>⚙ fᴇᴛᴄʜɪɴɢ ʀᴇQᴜɪʀᴇᴅ dᴇᴛᴀɪʟs fʀᴏᴍ yᴏᴜʀ lɪɴᴋ...</i>")
     try:
@@ -49,6 +49,7 @@ async def download_from_lazy_instagram(client, message, url):
 
         try:
             new_caption = post.caption if post.caption else "==========🍟=========="
+            lux_caption = new_caption
         except Exception as lazyerror:
             print(f"Caption not loaded : {lazyerror}")
             pass
@@ -79,7 +80,21 @@ async def download_from_lazy_instagram(client, message, url):
 
             # Send media group
             await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            lazymedia = await client.send_media_group(message.chat.id, media_list, parse_mode=enums.ParseMode.HTML)
+            lazymediagroup = await client.send_media_group(message.chat.id, media_list, parse_mode=enums.ParseMode.HTML)
+            
+            if lazymediagroup:
+            # Send the video to the log channel with details
+                org_cap = lux_caption[:97] + "..." if len(lux_caption) >= 100 else lux_caption
+
+                caption = (
+                        f"<b>📂 ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                        f"<blockquote><b>{org_cap}</b></blockquote>\n"
+                        f"<blockquote><b>🍿ᴘʟᴀᴛꜰᴏʀᴍ: {platform}</b></blockquote>\n"
+                        f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
+                        f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
+                        f"<blockquote>🔗 <b>ᴜʀʟ:</b> {url}</blockquote>"
+                    )
+                await client.send_media_group(LOG_CHANNEL, media_list, parse_mode=enums.ParseMode.HTML )
 
         else:
             # Single media handling
@@ -93,11 +108,12 @@ async def download_from_lazy_instagram(client, message, url):
         await progress_message2.delete()
         if lazymedia:
         # Send the video to the log channel with details
-            org_cap = new_caption[:97] + "..." if len(new_caption) >= 100 else new_caption
+            org_cap = lux_caption[:97] + "..." if len(lux_caption) >= 100 else lux_caption
 
             caption = (
-                    f"<b>📂ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                    f"<b>📂 ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
                     f"<blockquote><b>{org_cap}</b></blockquote>\n"
+                    f"<blockquote><b>🍿ᴘʟᴀᴛꜰᴏʀᴍ: {platform}</b></blockquote>\n"
                     f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
                     f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
                     f"<blockquote>🔗 <b>ᴜʀʟ:</b> {url}</blockquote>"
@@ -109,7 +125,7 @@ async def download_from_lazy_instagram(client, message, url):
                         caption=caption,
                         parse_mode=enums.ParseMode.HTML
                     )
-
+        
     except ConnectionException:
         await progress_message2.edit("🚨 Connection error. Please try again later.")
     except PrivateProfileNotFollowedException:
