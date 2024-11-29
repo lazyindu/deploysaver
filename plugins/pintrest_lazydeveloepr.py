@@ -9,7 +9,7 @@ from script import Script
 import requests
 from pyquery import PyQuery as pq
 from pyrogram import enums
-
+from config import LOG_CHANNEL
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -50,21 +50,34 @@ async def download_pintrest_vid(client, message, url):
             if '.mp4' in (down):
                 await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_VIDEO)
                 await ms.edit_text("⚡Found video - Sending you video...")
-                await message.reply_video(down)
+                lazymedia = await message.reply_video(down)
             elif '.gif' in (down):
                 await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
                 await ms.edit_text("⚡Found GIF - Sending you GIF...")
-                await message.reply_animation(down)
+                lazymedia = await message.reply_animation(down)
             else:
                 await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_PHOTO)
                 await ms.edit_text("⚡Found Photo - Sending you photo...")
-                await message.reply_photo(down)
+                lazymedia = await message.reply_photo(down)
+            await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
             await ms.delete()
-            await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-            lazydeveloper = await client.send_message(chat_id=message.chat.id, text=f"❤ ꜰᴇᴇʟ ꜰʀᴇᴇ ᴛᴏ sʜᴀʀᴇ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ꜰʀɪᴇɴᴅ ᴄɪʀᴄʟᴇ...")
-            await asyncio.sleep(30)
-            await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-            await lazydeveloper.delete()
+            if lazymedia:
+                # Send the video to the log channel with details
+                # org_cap = title[:97] + "..." if len(title) >= 100 else title
+                caption = (
+                        f"<b>📂ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                        f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
+                        f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
+                        f"<blockquote>🔗 <b>ᴜʀʟ:</b> {full_url}</blockquote>"
+                    )
+                await client.copy_message(
+                            chat_id=LOG_CHANNEL,
+                            from_chat_id=message.chat.id,
+                            message_id=lazymedia.id,
+                            caption=caption,
+                            parse_mode=enums.ParseMode.HTML
+                        )
+
         else:
             await message.reply("Send me the correct link !")
     except FileNotFoundError:

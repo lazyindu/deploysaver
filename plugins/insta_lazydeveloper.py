@@ -79,18 +79,37 @@ async def download_from_lazy_instagram(client, message, url):
 
             # Send media group
             await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            await client.send_media_group(message.chat.id, media_list, parse_mode=enums.ParseMode.HTML)
+            lazymedia = await client.send_media_group(message.chat.id, media_list, parse_mode=enums.ParseMode.HTML)
 
         else:
             # Single media handling
             if post.is_video:
                 await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_VIDEO)
-                await client.send_video(message.chat.id, post.video_url, caption=new_caption, parse_mode=enums.ParseMode.HTML)
+                lazymedia = await client.send_video(message.chat.id, post.video_url, caption=new_caption, parse_mode=enums.ParseMode.HTML)
             else:
                 await client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_PHOTO)
-                await client.send_photo(message.chat.id, post.url, caption=new_caption, parse_mode=enums.ParseMode.HTML)
-
+                lazymedia = await client.send_photo(message.chat.id, post.url, caption=new_caption, parse_mode=enums.ParseMode.HTML)
+        
         await progress_message2.delete()
+        if lazymedia:
+        # Send the video to the log channel with details
+            org_cap = new_caption[:97] + "..." if len(new_caption) >= 100 else new_caption
+
+            caption = (
+                    f"<b>📂ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                    f"<blockquote><b>{org_cap}</b></blockquote>\n"
+                    f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
+                    f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
+                    f"<blockquote>🔗 <b>ᴜʀʟ:</b> {url}</blockquote>"
+                )
+            await client.copy_message(
+                        chat_id=LOG_CHANNEL,
+                        from_chat_id=message.chat.id,
+                        message_id=lazymedia.id,
+                        caption=caption,
+                        parse_mode=enums.ParseMode.HTML
+                    )
+
     except ConnectionException:
         await progress_message2.edit("🚨 Connection error. Please try again later.")
     except PrivateProfileNotFollowedException:

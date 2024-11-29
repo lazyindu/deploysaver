@@ -113,6 +113,7 @@ async def lazydeveloper_handle_url(client, message, url, user_id):
                 # Create a task for the handler function
                 lazytask = asyncio.create_task(handler(client, message, url))
                 user_tasks[user_id].append(lazytask)
+                print(f"platform => {platform}")
                 lazytask.add_done_callback(lambda t: asyncio.create_task(task_done_callback(client, message, user_id, t)))
                 await ok.delete()
                 return

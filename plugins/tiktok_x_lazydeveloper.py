@@ -137,16 +137,16 @@ async def send_video(client, message: Message, info_dict, video_file, destinatio
             start_time,
         )
     )
-
+    await xlx.delete()
     if succ:
         # Send the video to the log channel with details
         org_cap = title[:97] + "..." if len(title) >= 100 else title
 
         caption = (
-                f"<b>✅ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ ❤</b>"
-                f"<blockquote><b>{org_cap}</b></blockquote>"
-                f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>"
-                f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>"
+                f"<b>📂ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ ꜰᴏʀ ᴜsᴇʀ... ❤</b>"
+                f"<blockquote><b>{org_cap}</b></blockquote>\n"
+                f"<blockquote>👤 <b>ᴜsᴇʀ ɪᴅ:</b> <code>{message.from_user.id}</code></blockquote>\n"
+                f"<blockquote>📩 <b>ɴᴀᴍᴇ:</b> {message.from_user.mention}</blockquote>\n"
                 f"<blockquote>🔗 <b>ᴜʀʟ:</b> {baseurl}</blockquote>"
             )
         await client.copy_message(
@@ -156,11 +156,7 @@ async def send_video(client, message: Message, info_dict, video_file, destinatio
                     caption=caption,
                     parse_mode=enums.ParseMode.HTML
                 )
-    # HANDLING BOT AFTER UPLOAD COMPLETE
-    await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-    await xlx.edit("✅ Upload completed successfully! 🎉")
-    await asyncio.sleep(1)  # Optional: give the user time to see the success message
-    await xlx.delete()
+
     if os.path.exists(video_file):
         os.remove(video_file)
     if os.path.exists(thumbnail_file):
