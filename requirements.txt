@@ -1,0 +1,21 @@
+aiofiles
+Pillow
+humanize
+hachoir
+motor
+pyrofork==2.3.45
+TgCrypto
+dnspython
+aiohttp
+pyromod==1.5
+instaloader
+yt-dlp
+youtube_dl
+ffmpeg
+requests
+loggers
+pyquery
+uvicorn
+# yt-dlp[default]==2024.11.18
+
+
